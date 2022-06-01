@@ -1,0 +1,327 @@
+openapi: 3.0.0
+
+info:
+  description: Um exemplo simplório de API tratando de imóveis.
+  version: 1.0.0
+  title: API de Imóveis
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  contact:
+    name: Henrique Martins
+    url: https://github.com/Henrique0501
+    email: mf.henrique@gmail.com
+
+
+tags:
+- name: Autenticação
+  description: Faça seu cadastro e seu login para ter acesso às rotas de post, put e delete
+- name: Imóveis
+  description: Teste a API
+
+components:
+  schemas:
+    Imóvel:
+      type: object
+      properties:
+        id:
+          type: integer
+        place:
+          type: string
+        area:
+          type: integer
+        rooms:
+          type: integer
+        garages:
+          type: integer
+        price:
+          type: number
+          format: float
+
+    Usuário:
+      type: object
+      properties:
+        id:
+          type: integer
+        username:
+          type: string
+        password:
+          type: string
+  securitySchemes:
+    bearerAuth: # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      in: header
+
+paths:
+  /auth/register:
+    post:
+      description: Cadastro de novo usuário.
+      tags:
+        - Autenticação
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Usuário'
+      responses:
+        '200':
+          description: Retorna o id e o username do usuário registrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  username:
+                    type: string
+        '422':
+          description: Username ou id já está sendo usado.
+
+  /auth/login:
+    post:
+      description: Faz o login do usuário já cadastrado.
+      tags:
+        - Autenticação
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Retorna o token de autenticação.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        '404':
+          description: Usuário inexistente.
+        '403':
+          description: Senha inválida.
+
+  /api/imoveis/search:
+    get:
+      description: Retorna todos os imóveis de acordo com os parâmetros informados.
+      tags:
+        - Imóveis
+      responses:
+        '200':
+          description: Uma lista contendo os imóveis correspondentes à pesquisa. Também é informado a quantidade de imóveis retornados.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Imóvel'
+      parameters:
+        - name: place
+          in: query
+          description: Localidade do imóvel
+          required: false
+          schema:
+            type: int
+          style: simple
+
+        - name: area
+          in: query
+          description: Área igual a
+          required: false
+          schema:
+            type: int
+          style: simple
+
+        - name: area_bg_th
+          in: query
+          description: Área maior que
+          required: false
+          schema:
+            type: int
+          style: simple
+
+        - name: area_sm_th
+          in: query
+          description: Área menor que
+          required: false
+          schema:
+            type: int
+          style: simple
+
+        - name: rooms
+          in: query
+          description: Quantidade de quartos igual a
+          required: false
+          schema:
+            type: int
+          style: simple
+
+        - name: rooms_bg_th
+          in: query
+          description: Quantidade de quartos maior que
+          required: false
+          schema:
+            type: int
+          style: simple
+
+        - name: rooms_sm_th
+          in: query
+          description: Quantidade de quartos menor que
+          required: false
+          schema:
+            type: int
+          style: simple
+
+        - name: garages
+          in: query
+          description: Quantidade de vagas na garagem igual a
+          required: false
+          schema:
+            type: int
+          style: simple
+
+        - name: garages_bg_th
+          in: query
+          description: Quantidade de vagas na garagem maior que
+          required: false
+          schema:
+            type: int
+          style: simple
+
+        - name: garages_sm_th
+          in: query
+          description: Quantidade de vagas na garagem menor que
+          required: false
+          schema:
+            type: int
+          style: simple
+
+        - name: price
+          in: query
+          description: Preço do imóvel igual a
+          required: false
+          schema:
+            type: float
+          style: simple
+
+        - name: price_bg_th
+          in: query
+          description: Preço do imóvel maior que
+          required: false
+          schema:
+            type: float
+          style: simple
+
+        - name: price_sm_th
+          in: query
+          description: Preço do imóvel menor que
+          required: false
+          schema:
+            type: float
+          style: simple
+
+
+  /api/imoveis/register:
+    post:
+      description: Registra um novo imóvel.
+      tags:
+        - Imóveis
+      security:
+        - bearerAuth: []
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Imóvel'
+      responses:
+        '200':
+          description: Retorna o imóvel registrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Imóvel'
+        '404':
+          description: Localidade inválida
+        '401':
+          description: Token não informado
+        '422':
+          description: Bad Authorization header ou id já existente
+
+
+  /api/imoveis/update/{id}:
+    put:
+      description: Altera um imóvel registrado.
+      tags:
+        - Imóveis
+
+      security:
+        - bearerAuth: [ ]
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Imóvel'
+
+      responses:
+        '200':
+          description: Retorna o imóvel alterado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Imóvel'
+        '404':
+          description: Localidade inválida ou id inválido
+        '401':
+          description: Token não informado
+        '422':
+          description: Bad Authorization header
+
+      parameters:
+        - name: id
+          in: path
+          description: Id do imóvel
+          required: true
+          schema:
+            type: integer
+          style: simple
+
+  /api/imoveis/delete/{id}:
+    delete:
+      description: Deleta um imóvel registrado.
+      tags:
+        - Imóveis
+
+      security:
+        - bearerAuth: [ ]
+
+      responses:
+        '200':
+          description: Retorna mensagem de sucesso.
+        '404':
+          description: Id inválido
+        '401':
+          description: Token não informado
+        '422':
+          description: Bad Authorization header
+
+      parameters:
+        - name: id
+          in: path
+          description: Id do imóvel
+          required: true
+          schema:
+            type: integer
+          style: simple
