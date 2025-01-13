@@ -10,7 +10,7 @@
 
 <p align="center">
  <a href="http://apideimoveis.herokuapp.com/api/docs/">Link do projeto</a>
- <p>(A aplicação estava hospedada em um servidor gratutito que foi descontinuado. Em breve farei o deploy em outro servidor. De qualquer forma, a aplicação funciona bem.)</p>
+ <p align="center">(A aplicação estava hospedada em um servidor gratutito que foi descontinuado. Em breve farei o deploy em outro servidor. De qualquer forma, a aplicação funciona bem.)</p>
 </p>
   
 
