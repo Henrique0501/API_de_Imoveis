@@ -18,7 +18,7 @@ Um exemplo simplório de API Rest em Flask tratando de imóveis.
 
 <h2>Descrição</h2>
 
-<p>Essa API foi construída a partir microframework Flask.</p>
+<p>Essa API foi construída a partir do microframework Flask.</p>
 <p>Para integração com o banco de dados utilizou-se o ORM SQLAlchemy.</p>
 <p>Para os processos de serialização e desserialização foi utilzado o framework Marshmallow.</p>
 <p>Para os processos de autenticação utilizou-se a extensão flask_jwt_extended.</p>
